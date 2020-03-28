@@ -28,7 +28,7 @@ def make_data_request(data_request_url,params,API_USERNAME,API_TOKEN):
 
     # Checks each second to see if complete,
     try:
-        check_complete = data['allURLs'][1] + '/status.txt'
+        check_complete = data['allURLs'][1] + '/status.json'
     except KeyError:
         print('No data found in specified date range')
     for i in range(1000):
