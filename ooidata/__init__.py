@@ -19,25 +19,27 @@ def make_url(site,node,instrument,method,stream,API_USERNAME,API_TOKEN):
 
     return (data_request_url,meta_data)
 
-def make_data_request(data_request_url,params,API_USERNAME,API_TOKEN):
+def make_data_request(data_request_url,params,API_USERNAME,API_TOKEN,check_status=True):
     """Function for making data request"""
 
     # Makes data request to OOI server
     r = requests.get(data_request_url, params=params, auth=(API_USERNAME, API_TOKEN))
     data = r.json()
 
-    # Checks each second to see if complete,
     try:
         check_complete = data['allURLs'][1] + '/status.json'
     except KeyError:
-        print('No data found in specified date range')
-    for i in range(1000):
-        r = requests.get(check_complete)
-        if r.status_code == requests.codes.ok:
-            print('request completed')
-            break
-        else:
-            time.sleep(1)
+        raise Exception('No data found in specified date range')
+
+    # Checks each second to see if complete
+    if check_status==True:
+        for i in range(1000):
+            r = requests.get(check_complete)
+            if r.status_code == requests.codes.ok:
+                print('request completed')
+                break
+            else:
+                time.sleep(1)
 
     # Grab urls
     url_thredds = data['allURLs'][0]
