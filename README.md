@@ -14,12 +14,10 @@ To install on your local machine there are several options. Option 1 is the simp
 !pip install git+https://github.com/tompc35/ooidata.git
 ```
 
-##### 2. Fork, clone and install using pip:
+##### 2. Clone and install using pip:
 
-* First fork the repository on Github. This will create a new repository on Github under your account at https://github.com/username/ooidata.git (your Github username will be in the place of `username`).
-
-* Next, clone the forked repository and use pip to install. The `-e` option installs in developer mode so that you do not reinstall every time you want to make a change to the package (although you do still have to restart the kernel).
+* Clone the repository and use pip to install. The `-e` option installs in developer mode so that you do not reinstall every time you want to make a change to the package (although you do still have to restart the kernel).
 ```
-git clone https://github.com/username/ooidata.git
+git clone https://github.com/tompc35/ooidata.git
 pip install -e .
 ```
