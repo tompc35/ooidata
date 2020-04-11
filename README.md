@@ -6,19 +6,14 @@ Under development.
 
 #### Installation
 
-To install on your local machine there are several options. Option 1 is the simplest and best for working on Google Colab. Option 2 is best if you want to edit the package and contribute to the repository.
-
-##### Option 1. Use pip to install directly from git
+The easiest way to install is to use use pip on the command line:
 
 ```bash
 pip install git+https://github.com/tompc35/ooidata.git
 ```
 
-##### Option 2. Clone and install using pip:
+#### Contributing
 
-* Clone the repository and use pip to install. The `-e` option installs in developer mode so that you do not reinstall every time you want to make a change to the package (although you do still have to restart the kernel).
+Contributions are welcome, either by raising an issue or making a pull request.
 
-```bash
-git clone https://github.com/tompc35/ooidata.git
-pip install -e .
-```
+If you would like to make a pull request, see [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to use Git to fork, clone, install, edit and pull changes.
