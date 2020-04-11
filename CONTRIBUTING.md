@@ -4,7 +4,7 @@ Make suggestions, request features and report bugs at https://github.com/tompc35
 
 ### Make a pull request
 
-To contribute code, follow the [fork-and-branch Git workflow](https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/). The steps are outlined below.
+To contribute code, follow the [fork-and-branch Git workflow](https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/). The steps are outlined below. The [setup](#setup) steps (1-4) only have to be done once. The steps for [making changes](#making-changes) (5-10) should be done for each new feature or enhancement that you add to the project.
 
 #### Setup
 
@@ -97,3 +97,32 @@ git push origin new-branch-name
 ```
 
 Replace `new-branch-name` with the name of your branch that you created in step 6.
+
+##### 9. Open a pull request
+
+Visit the page for your forked repository on Github. You will be prompted to [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork).
+
+The code will be reviewed and you may be asked to make some changes before the pull request is merged.
+
+##### 10. Clean up after merged pull request
+
+Once your changes have been reviewed and merged, you can update the master branch of your local repository:
+
+```
+git pull upstream master
+```
+
+Now you can delete the new branch where you made the edits (replace `new-branch-name` with the branch name you created in step 6):
+
+```
+git branch -d new-branch-name
+```
+Update the master branch of your forked repository:
+```
+git push origin master
+```
+
+Deletion of the new branch on your forked GitHub repository (replace `new-branch-name` with the branch name you created in step 6):
+```
+git push --delete origin new-branch-name
+```
