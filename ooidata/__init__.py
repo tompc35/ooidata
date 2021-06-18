@@ -4,6 +4,7 @@ import requests
 import re
 import os
 import time
+import fnmatch
 
 def make_url(site,node,instrument,method,stream,API_USERNAME,API_TOKEN):
     """Function for generating meta and data request urls"""
@@ -47,33 +48,36 @@ def make_data_request(data_request_url,params,API_USERNAME,API_TOKEN,check_statu
 
     return (url_thredds, url_netcdf, data)
 
-def list_thredds_datasets(catalog_url,pattern_str='',append_str='',tds_url=None):
-    """Return a list of NetCDF datasets from an OOI THREDDS catalog.
+def list_opendap_urls(catalog_url,pattern_str='',append_str=''):
+    """Return a list of OpenDAP urls from an OOI THREDDS catalog.
 
-    catalog_url - string containing full url for the catalog, ending with /catalog.html
-    pattern_str - string containing a pattern that must be in the dataset name (default '')
-    append_str - string that will be appended to the end of each filename (default '')
-    tds_url - the base OpenDAP url for the datasets
-              (default: https://opendap.oceanobservatories.org/thredds/dodsC)
+    catalog_url - string containing full url for the catalog, ending with catalog.html or catalog.xml
+    pattern_str - string containing a pattern that must be in the dataset name (default '*.nc')
+                  (uses Unix shell-style wildcards)
+    append_str - string that will be appended to the end of each filename
+                (example: '#fillmismatch', which is usually needed for OOI data)
+
+    Similar inputs and functionality as older obsolete function list_thredds_datasets
+    Requires siphon package: https://unidata.github.io/siphon/latest/
     """
 
-    # set default tds_url if none provided
-    if tds_url is None:
-        tds_url = 'https://opendap.oceanobservatories.org/thredds/dodsC'
+    from siphon.catalog import TDSCatalog
 
-    # parse datasets in catalog
-    datasets = requests.get(catalog_url).text
-    urls = re.findall(r'href=[\'"]?([^\'" >]+)', datasets)
-    x = re.findall(r'(ooi/.*?'+pattern_str+'.*?.nc)', datasets)
-    for i in x:
-        if i.endswith('.nc') == False:
-            x.remove(i)
-    for i in x:
-        try:
-            float(i[-4])
-        except:
-            x.remove(i)
+    catalog = TDSCatalog(catalog_url)
+    dataset_subset = fnmatch.filter(catalog.datasets,pattern_str)
 
-    # create list of datasets
-    dataset_list = [os.path.join(tds_url, i)+append_str for i in x]
-    return dataset_list
+    opendap_url_list = []
+    for dataset_name in sorted(dataset_subset):
+        opendap_url = catalog.datasets[dataset_name].access_urls['OPENDAP']
+        opendap_url_list.append(opendap_url+append_str)
+
+    return opendap_url_list
+
+if __name__ == '__main__':
+    print('testing list_opendap_urls')
+    catalog_url = 'http://thredds.dataexplorer.oceanobservatories.org/thredds/catalog/ooigoldcopy/public/CE02SHSM-RID26-01-ADCPTA000-recovered_inst-adcp_velocity_earth/catalog.html'
+    pattern_str = 'deployment0009*ADCP*20190904*.nc'
+    append_str = '#fillmismatch'
+
+    opendap_url_list = list_opendap_urls(catalog_url,pattern_str,append_str)
+    print(opendap_url_list)
